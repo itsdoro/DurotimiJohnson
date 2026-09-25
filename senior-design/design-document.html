@@ -26,6 +26,23 @@ img{max-width:100%}
 .nav{position:sticky;top:0;z-index:10;background:rgba(255,255,255,.96);border-bottom:1px solid var(--rule);backdrop-filter:blur(6px)}
 .nav-inner{max-width:68rem;margin:0 auto;padding:.7rem 1.5rem;display:flex;gap:1.5rem;align-items:center}
 .nav-name{font:600 1.05rem var(--head);color:var(--ink);text-decoration:none;white-space:nowrap}
+.menu-btn{flex:none;width:2.5rem;height:2.5rem;display:grid;place-content:center;gap:5px;background:none;border:1px solid var(--rule);cursor:pointer;padding:0}
+.menu-btn:hover{border-color:var(--cardinal)}
+.menu-btn span{display:block;width:20px;height:2px;background:var(--ink)}
+.drawer{position:fixed;top:0;left:0;bottom:0;width:min(20rem,85vw);background:var(--paper);border-right:1px solid var(--rule);z-index:30;transform:translateX(-100%);visibility:hidden;transition:transform .25s ease,visibility .25s;overflow-y:auto;padding:1rem 1.5rem 2rem}
+.drawer.open{transform:none;visibility:visible}
+.drawer-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
+.drawer-head span{font:600 1.05rem var(--head)}
+.menu-close{background:none;border:0;font-size:1.8rem;line-height:1;cursor:pointer;color:var(--muted);padding:.2rem .4rem}
+.menu-close:hover{color:var(--cardinal)}
+.drawer ul{list-style:none;margin:0;padding:0}
+.drawer li a{display:block;padding:.5rem 0;font:500 1rem var(--head);color:var(--ink);text-decoration:none;border-top:1px solid var(--rule)}
+.drawer li a:hover,.drawer li a[aria-current="page"]{color:var(--cardinal)}
+.drawer .sub{margin:0 0 .4rem .2rem;padding-left:.9rem;border-left:2px solid var(--cardinal)}
+.drawer .sub a{border-top:0;padding:.3rem 0;font-size:.93rem;color:var(--muted)}
+.menu-backdrop{position:fixed;inset:0;background:rgba(30,34,41,.35);z-index:25;opacity:0;visibility:hidden;transition:opacity .25s,visibility .25s}
+.menu-backdrop.open{opacity:1;visibility:visible}
+@media (prefers-reduced-motion:reduce){.drawer,.menu-backdrop{transition:none}}
 .nav ul{list-style:none;margin:0;padding:0;display:flex;gap:1.1rem;overflow-x:auto;scrollbar-width:none}
 .nav li a{font:500 .92rem var(--head);color:var(--muted);text-decoration:none;white-space:nowrap}
 .nav li a:hover{color:var(--cardinal)}
@@ -80,7 +97,7 @@ footer{border-top:1px solid var(--rule);background:var(--soft);font-size:.9rem;c
 footer .inner{max-width:68rem;margin:0 auto;padding:1.75rem 1.5rem;display:flex;flex-wrap:wrap;gap:.5rem 2rem}
 
 @media (max-width:760px){
-  .nav-name{display:none}
+  .nav ul{display:none}
   .hero-inner{grid-template-columns:1fr;gap:2rem;padding:3rem 1.5rem}
   .photo{width:10rem}
   .smith{opacity:.25}
@@ -106,10 +123,29 @@ footer .inner{max-width:68rem;margin:0 auto;padding:1.75rem 1.5rem;display:flex;
 <body>
 <nav class="nav" aria-label="Site">
   <div class="nav-inner">
+    <button class="menu-btn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="site-menu"><span></span><span></span><span></span></button>
     <a class="nav-name" href="../index.html#top">Durotimi Johnson</a>
     <ul><li><a href="../index.html#senior-design">Back to senior design</a></li></ul>
   </div>
 </nav>
+<div class="menu-backdrop"></div>
+<aside class="drawer" id="site-menu" aria-label="Site menu">
+  <div class="drawer-head"><span>Menu</span><button class="menu-close" type="button" aria-label="Close menu">&times;</button></div>
+  <ul>
+    <li><a href="../index.html#top">Home</a></li>
+    <li><a href="../index.html#objective">Career objective</a></li>
+    <li><a href="../index.html#senior-design">Senior design</a>
+      <ul class="sub"><li><a href="design-document.html" aria-current="page">Design document</a></li><li><a href="final-report.html">Final report</a></li><li><a href="poster.html">Poster</a></li><li><a href="team-website.html">Team website</a></li></ul>
+    </li>
+    <li><a href="../index.html#projects">Projects</a></li>
+    <li><a href="../index.html#experience">Experience</a></li>
+    <li><a href="../index.html#resume">Resume</a></li>
+    <li><a href="../index.html#gen-ed">Gen Ed reflection</a></li>
+    <li><a href="../index.html#cumulative">Cumulative reflection</a></li>
+    <li><a href="../index.html#ethics">Ethics paper</a></li>
+  </ul>
+</aside>
+
 <main>
 <section class="doc-body">
   <div class="sec-head"><h2>Design document</h2><a class="to-top" href="../index.html#senior-design">Back to portfolio</a></div>
@@ -118,5 +154,14 @@ footer .inner{max-width:68rem;margin:0 auto;padding:1.75rem 1.5rem;display:flex;
 </section>
 </main>
 <footer><div class="inner"><span>Durotimi Johnson &middot; <a href="mailto:itsdoro199671@gmail.com">itsdoro199671@gmail.com</a></span></div></footer>
+<script>
+(function(){var b=document.querySelector('.menu-btn'),d=document.getElementById('site-menu'),o=document.querySelector('.menu-backdrop'),c=d.querySelector('.menu-close');
+function set(x){b.setAttribute('aria-expanded',x);d.classList.toggle('open',x);o.classList.toggle('open',x);if(x)c.focus();}
+b.addEventListener('click',function(){set(b.getAttribute('aria-expanded')!=='true')});
+c.addEventListener('click',function(){set(false);b.focus()});
+o.addEventListener('click',function(){set(false)});
+d.addEventListener('click',function(e){if(e.target.closest('a'))set(false)});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&d.classList.contains('open')){set(false);b.focus()}});})();
+</script>
 </body>
 </html>
